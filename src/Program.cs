@@ -1,16 +1,19 @@
-﻿using AuthressStarterKit;
+﻿using System.Text.RegularExpressions;
+
+using AuthressStarterKit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
+        AuthressConfiguration.VerifyConfiguration();
+
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
 
         builder.Services.AddControllers();
-        // Automatically generate an OpenAPI specification for your application (Configured using: https://aka.ms/aspnetcore/swashbuckle)
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
@@ -31,10 +34,8 @@ internal class Program
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
-            options.Authority = $"https://{AuthressConfiguration.CustomDomain}";
+            options.Authority = $"https://{Regex.Replace(AuthressConfiguration.AuthenticationCustomDomain, "https?://", "")}";
         });
-
-
 
         var app = builder.Build();
 
@@ -42,8 +43,12 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+        }
+
         app.MapControllers();
-        // app.UseMiddleware<UserMiddleware>();
 
         app.Run();
     }

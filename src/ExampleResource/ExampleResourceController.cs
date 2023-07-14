@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using Authress.SDK.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthressStarterKit.Controllers;
 
 [ApiController]
-[Route("/example-resource")]
+[Route("example-resource")]
 [Authorize]
 public class ExampleResourceController : ControllerBase
 {
@@ -16,15 +19,36 @@ public class ExampleResourceController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet(Name = "GetExampleResource")]
-    public ExampleResource Get()
+    [HttpGet("{resourceId}")]
+    public async Task<IActionResult> GetExampleResource([FromRoute] string resourceId)
     {
-        return new ExampleResource{ ResourceId = "New-Resource-ID" };
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await AuthressConfiguration.GetAuthressClient().AuthorizeUser(userId, $"resources/example-resource/{resourceId}", "READ");
+            return Ok(new ExampleResource{ ResourceId = resourceId });
+        } catch (NotAuthorizedException error)
+        {
+            System.Console.WriteLine(error);
+            return Unauthorized();
+        }
     }
 
-    [HttpPost(Name = "CreateExampleResource")]
-    public ExampleResource CreateExampleResource()
+    [HttpPost()]
+    public async Task<IActionResult> CreateExampleResource([FromBody, Required] ExampleResource exampleResource)
     {
-        return new ExampleResource{ ResourceId = "New-Resource-ID" };
+        var newResourceId = "New-Resource-ID";
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await AuthressConfiguration.GetAuthressClient().AuthorizeUser(userId, $"resources/example-resource/{newResourceId}", "CREATE");
+
+            exampleResource.ResourceId = newResourceId;
+            return Ok(exampleResource);
+        } catch (NotAuthorizedException error)
+        {
+            System.Console.WriteLine(error);
+            return Unauthorized();
+        }
     }
 }

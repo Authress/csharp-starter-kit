@@ -30,9 +30,10 @@ dotnet run
 
 The service will then be running on `http://localhost:5000` by default
 * And then use `curl` or `postman` to hit any of the endpoints.
+* Grab your AUTHORIZATION_TOKEN from https://authress.io/app/#/api
 
 ```sh
-curl -XGET http://localhost:5000/example-resource
+curl -XGET http://localhost:5000/example-resource -H"Authorization: Bearer AUTHORIZATION_TOKEN"
 ```
 
 ## See the code
@@ -52,3 +53,9 @@ There are three controllers, they all use Authress in some way to authorize the 
 The important part of the integration is to get the userId and Authress client to authorize the user. This is done by adding a middleware to parse out the caller, and one line in the service to validate this.
 
 * [Authentication Middleware](.src/Program.cs)
+
+## Troubleshooting issues
+
+`Microsoft.IdentityModel.Tokens.SecurityTokenSignatureKeyNotFoundException: IDX10501: Signature validation failed. Unable to match key:`
+
+There is a current bug with the implementation in ASP.NET MVC JWT Bearer token verification not accepting our more secure EdDSA tokens. The full extent of the issue is available in this [GitHub Issue](https://github.com/Authress/authress-sdk.cs/issues/20). For now, please just reach out to us at [Authress Support](https://authress.io/app/#/support), and we'll make a quick fix for you.
