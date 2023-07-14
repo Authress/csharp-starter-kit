@@ -14,12 +14,15 @@ namespace AuthressStarterKit;
 public static class AuthressConfiguration
 {
     /// <summary>
+    /// IF USING AUTHRESS AUTHENTICATION
     /// Your custom domain specified in Authress configured to sign your users JWTs. This is used for Authress Authentication.
     /// * For Production this must be switched to your custom domain, for development the login.authress.io domain can be used.
     /// * This url is set in your Authress account: https://authress.io/app/#/api?route=overview
     /// * A custom URL can be configured in the custom domain settings: https://authress.io/app/#/settings?focus=domain
+    /// ELSE
+    /// * Set this to the relevant issuer from your third party
     /// </summary>
-    public const string AuthenticationCustomDomain = "login.authress.io";
+    public const string AuthenticationProviderOAuthIssuerUrl = "login.authress.io";
 
     /// <summary>
     /// The URL used to connect to Authress. If you use a custom domain then this can be the custom domain.
@@ -48,7 +51,7 @@ public static class AuthressConfiguration
 
     public static void VerifyConfiguration()
     {
-        if (string.IsNullOrEmpty(AuthressConfiguration.AuthenticationCustomDomain)) {
+        if (string.IsNullOrEmpty(AuthressConfiguration.AuthenticationProviderOAuthIssuerUrl)) {
             throw new Exception("The AuthressConfiguration for your Custom Domain must be specified. The URL used to verify authentication tokens. This url is set in your Authress account: https://authress.io/app/#/api?route=overview * A custom URL can be configured in the custom domain settings: https://authress.io/app/#/settings?focus=domain");
         }
 

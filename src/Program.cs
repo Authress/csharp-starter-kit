@@ -34,7 +34,7 @@ internal class Program
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
-            options.Authority = $"https://{Regex.Replace(AuthressConfiguration.AuthenticationCustomDomain, "https?://", "")}";
+            options.Authority = $"https://{Regex.Replace(AuthressConfiguration.AuthenticationProviderOAuthIssuerUrl, "https?://", "")}";
         });
 
         var app = builder.Build();

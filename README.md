@@ -19,6 +19,13 @@ sudo apt install dotnet-sdk-7.0 dotnet-hostfxr-7.0 dotnet-runtime-7.0 dotnet-run
 ```
 Also make sure to switch the version specified in the `launch.json` and in the `AuthressStarterKit.csproj` to 7.0 before running `dotnet restore`.
 
+### Configure the example
+
+Update `src/AuthressConfiguration.cs`:
+* `AuthenticationProviderOAuthIssuerUrl` - to point to your JWT Authentication OAuth 2 provider's Issuer URL. If you are using Authress for development this is: `login.authress.io`, and for production it will be your [custom domain url](https://authress.io/app/#/settings?focus=domain).
+* `AuthressApiHostUrl` - to point to your Authress account [Host API URL](https://authress.io/app/#/api).
+* `ServiceClientAccessKey` - Create and configure an Authress Service Client Access Token. Generate one at [Authress service clients](https://authress.io/app/#/settings?focus=clients), or see the [service client access key documentation](https://authress.io/knowledge-base/docs/authorization/service-clients).
+
 ### Running the example:
 
 ```sh
