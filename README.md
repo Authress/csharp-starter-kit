@@ -1,3 +1,7 @@
+<p id="main" align="center">
+  <img src="https://authress.io/static/images/linkedin-banner.png" alt="Authress media banner">
+</p>
+
 # Authress Starter Kit: C# + .NET (ASP MVC)
 The C# Starter Kit for Authress includes Authentication, Authorization, user identity and role management
 
